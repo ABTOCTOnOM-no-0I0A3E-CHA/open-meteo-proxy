@@ -14,7 +14,7 @@
 
 ## English
 
-Minimal HTTP reverse-proxy for [Open-Meteo API](https://open-meteo.com/) with proxy support for bypassing geo-restrictions.
+Minimal HTTP reversee-proxy for [Open-Meteo API](https://open-meteo.com/) with proxy support for bypassing geo-restrictions.
 
 ### Features
 
@@ -70,21 +70,23 @@ All Open-Meteo query parameters (`hourly`, `daily`, `current`, etc.) are passed 
 
 ### Environment variables
 
-| Variable | Required | Description |
-|---|---|---|
-| `PORT` | No (default: `3001`) | Server port |
-| `OPEN_METEO_PROXY` | No | Proxy URL (`socks5://...`, `socks4://...`, `http://...`, `https://...`). If unset — direct connection |
+| Variable           | Required             | Description                                                                                           |
+| ------------------ | -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `PORT`             | No (default: `3001`) | Server port                                                                                           |
+| `OPEN_METEO_PROXY` | No                   | Proxy URL (`socks5://...`, `socks4://...`, `http://...`, `https://...`). If unset — direct connection |
 
 ### How to change the proxy
 
 Just update `OPEN_METEO_PROXY` and restart:
 
 **Without Docker:**
+
 ```bash
 OPEN_METEO_PROXY=socks5://new-proxy:1080 bun run start
 ```
 
 **With Docker:**
+
 ```bash
 # Stop and remove old container
 docker stop open-meteo-proxy && docker rm open-meteo-proxy
@@ -170,21 +172,23 @@ GET /forecast?latitude=55.75&longitude=37.62
 
 ### Переменные окружения
 
-| Переменная | Обязательно | Описание |
-|---|---|---|
-| `PORT` | Нет (по умолч.: `3001`) | Порт сервера |
-| `OPEN_METEO_PROXY` | Нет | URL прокси (`socks5://...`, `socks4://...`, `http://...`, `https://...`). Если не задана — прямое соединение |
+| Переменная         | Обязательно             | Описание                                                                                                     |
+| ------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `PORT`             | Нет (по умолч.: `3001`) | Порт сервера                                                                                                 |
+| `OPEN_METEO_PROXY` | Нет                     | URL прокси (`socks5://...`, `socks4://...`, `http://...`, `https://...`). Если не задана — прямое соединение |
 
 ### Как заменить прокси
 
 Поменять `OPEN_METEO_PROXY` и перезапустить:
 
 **Без Docker:**
+
 ```bash
 OPEN_METEO_PROXY=socks5://новый-прокси:1080 bun run start
 ```
 
 **С Docker:**
+
 ```bash
 # Остановить и удалить старый контейнер
 docker stop open-meteo-proxy && docker rm open-meteo-proxy
