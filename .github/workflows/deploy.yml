@@ -1,0 +1,46 @@
+name: Deploy to server
+
+on:
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            docker pull ${{ env.REGISTRY }}/${{ github.repository }}:latest
+            docker stop open-meteo-proxy 2>/dev/null || true
+            docker rm open-meteo-proxy 2>/dev/null || true
+            docker run -d \
+              --name open-meteo-proxy \
+              --restart unless-stopped \
+              -p 3001:3001 \
+              -e OPEN_METEO_PROXY="${{ secrets.OPEN_METEO_PROXY }}" \
+              ${{ env.REGISTRY }}/${{ github.repository }}:latest
+            docker image prune -f
