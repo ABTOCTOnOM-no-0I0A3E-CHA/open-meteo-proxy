@@ -3,6 +3,11 @@ name: Deploy to server
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
 
 env:
   REGISTRY: ghcr.io
@@ -35,7 +40,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT || '22' }}
           script: |
-            docker pull ${{ env.REGISTRY }}/${{ github.repository }}:latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             docker stop open-meteo-proxy 2>/dev/null || true
             docker rm open-meteo-proxy 2>/dev/null || true
             docker run -d \
@@ -43,5 +48,5 @@ jobs:
               --restart unless-stopped \
               -p ${{ secrets.SERVER_PORT || '3001' }}:3001 \
               -e OPEN_METEO_PROXY="${{ secrets.OPEN_METEO_PROXY }}" \
-              ${{ env.REGISTRY }}/${{ github.repository }}:latest
+              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             docker image prune -f
