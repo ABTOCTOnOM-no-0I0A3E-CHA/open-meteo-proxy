@@ -51,6 +51,7 @@ if (!PROXY_URL) {
           });
         },
       );
+      req.on("timeout", () => req.destroy(new Error("Request timed out")));
       req.on("error", reject);
       req.end();
     });
@@ -89,7 +90,8 @@ const app = new Elysia()
 
       set.headers["Cache-Control"] = "public, s-maxage=1800, stale-while-revalidate=3600";
       return data;
-    } catch {
+    } catch (err) {
+      console.error("Upstream error:", err);
       set.status = 502;
       return { error: "Open-Meteo unavailable" };
     }
