@@ -14,7 +14,7 @@
 
 ## English
 
-Minimal HTTP reversee-proxy for [Open-Meteo API](https://open-meteo.com/) with proxy support for bypassing geo-restrictions.
+Minimal HTTP reverse-proxy for [Open-Meteo API](https://open-meteo.com/) with proxy support for bypassing geo-restrictions.
 
 ### Features
 
